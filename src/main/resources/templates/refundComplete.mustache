@@ -1,0 +1,39 @@
+{{>fragments/header}}
+
+<div style="text-align: center; padding: 10%" >
+    <h1>Refund Process Complete!!</h1>
+    <h3>The refunded products have been added back to your cart.</h3>
+
+    <a href="/" style="padding-top: 5%">Home</a>
+</div>
+<script>
+    const refundMessage = "{{#refundMessage}}{{refundMessage}}{{/refundMessage}}";
+
+    if (refundMessage && refundMessage.trim() !== "") {
+        alert(refundMessage);
+    }
+
+        {{#refundDetail}}
+        dataLayer.push({ecommerce: null});
+        dataLayer.push({
+            event: 'refund',
+            ecommerce: {
+                currency: "{{currencyCode}}",
+                transaction_id: "{{orderId}}",
+                value:{{totalOrderAmount}},
+                items: [
+                    {{#orderCartList}}
+                        {
+                            item_id: "{{productId}}",
+                            item_name: "{{productName}}",
+                            price: {{price}},
+                            quantity: {{quantity}}
+                        },
+                    {{/orderCartList}}
+                ]
+            }
+        });
+        {{/refundDetail}}
+</script>
+
+{{>fragments/footer}}

@@ -1,0 +1,86 @@
+{{! src/main/resources/templates/shop.mustache }}
+{{>fragments/header}}
+
+<div class="product-big-title-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="product-bit-title text-center">
+                    <h2>Shop</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="single-product-area">
+    <div class="zigzag-bottom"></div>
+    <div class="container">
+        <div class="row">
+            {{#products}}
+                <div class="col-md-3 col-sm-6">
+                    <div class="single-shop-product">
+                        <div class="product-upper">
+                            <img src="img/book.jpg" alt="">
+                        </div>
+                        <h2>
+                            <a href="/single-product/{{pid}}"
+                               style="  display: -webkit-box;
+                                        -webkit-line-clamp: 2;
+                                        -webkit-box-orient: vertical;
+                                        overflow: hidden;
+                                        text-overflow: ellipsis;
+                                        line-height: 1.2em;
+                                        height: 2.4em;">
+                                {{pname}}
+                            </a>
+                        </h2>
+                        <div class="product-carousel-price">
+                            <ins>{{currencySymbol}}{{price}}</ins>
+                            <del>{{currencySymbol}}{{price}}</del>
+                        </div>
+
+                        <div class="product-option-shop">
+                            <a class="add_to_cart_button" data-quantity="1" data-product_sku="" data-product_id="{{pid}}" rel="nofollow" href="/cart/add/{{pid}}">Add to cart</a>
+                        </div>
+                    </div>
+                </div>
+            {{/products}}
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="product-pagination text-center">
+                    <nav>
+                        <ul class="pagination">
+                            {{#hasPrevious}} {{! 이전 페이지가 있다면 }}
+                                <li>
+                                    <a href="/shop?pageNum={{previousPageNum}}&pageSize={{productPage.size}}&sortBy={{sortBy}}&sortDir={{sortDir}}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            {{/hasPrevious}}
+
+                            {{#pageNumbers}} {{! Controller에서 넘겨준 pageNumbers (List<PageInfo>)를 반복 }}
+                                <li {{#active}}class="active"{{/active}}> {{! PageInfo 객체의 active 필드 사용 }}
+                                    <a href="/shop?pageNum={{pageNumber}}&pageSize={{productPage.size}}&sortBy={{sortBy}}&sortDir={{sortDir}}">{{displayPageNumber}}</a> {{! PageInfo 객체의 displayPageNumber 필드 사용 }}
+                                </li>
+                            {{/pageNumbers}}
+
+                            {{#hasNext}} {{! 다음 페이지가 있다면 }}
+                                <li>
+                                    <a href="/shop?pageNum={{nextPageNum}}&pageSize={{productPage.size}}&sortBy={{sortBy}}&sortDir={{sortDir}}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            {{/hasNext}}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{>fragments/footer}}

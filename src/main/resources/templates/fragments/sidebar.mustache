@@ -1,0 +1,46 @@
+<div class="col-md-4">
+    <div class="single-sidebar">
+        <h2 class="sidebar-title">Search Products</h2>
+        <form action="">
+            <input type="text" placeholder="Search products...">
+            <input type="submit" value="Search">
+        </form>
+    </div>
+
+    <div class="single-sidebar">
+        <h2 class="sidebar-title">Products</h2>
+        {{#top4List}}
+        <div class="thubmnail-recent">
+            <img src="/img/book.jpg" class="recent-thumb" alt="">
+            <h2>
+                <a href="/single-product/{{pid}}" style="display: -webkit-box;
+                           -webkit-line-clamp: 2;
+                           -webkit-box-orient: vertical;
+                           overflow: hidden;
+                           text-overflow: ellipsis;" >
+                    {{pname}}
+                </a>
+            </h2>
+            <div class="product-sidebar-price">
+                <ins>{{currencySymbol}}{{price}}</ins> <del>{{currencySymbol}}{{price}}</del>
+            </div>
+        </div>
+        {{/top4List}}
+    </div>
+
+    <div class="single-sidebar">
+        <h2 class="sidebar-title">Recent Posts</h2>
+        <ul>
+            {{#top5List}}
+                <li><a href="/single-product/{{pid}}"
+                       style=" display: -webkit-box;
+                               -webkit-line-clamp: 1;
+                               -webkit-box-orient: vertical;
+                               overflow: hidden;
+                               text-overflow: ellipsis;">
+                    {{pname}}
+                </a></li>
+            {{/top5List}}
+        </ul>
+    </div>
+</div>

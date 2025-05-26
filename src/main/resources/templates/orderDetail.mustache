@@ -1,0 +1,86 @@
+{{>fragments/header}}
+
+<div class="product-big-title-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="product-bit-title text-center">
+                    <h2>Order List</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="single-product-area">
+    <div class="zigzag-bottom"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8" style="width: 100%">
+                <div class="product-content-right">
+                    <div class="woocommerce" >
+                        {{#orderList}}
+                        <div class="order-container" style="border: 1px solid #ddd; margin-bottom: 20px; padding: 15px;">
+                            <h3 style="margin-top: 0;">Order #{{orderId}}</h3>
+                            <p><strong>Order Date:</strong> {{orderDate}}</p>
+                            <p><strong>Customer:</strong> {{userName}}</p>
+                            <table cellspacing="0" class="shop_table cart">
+                                <thead>
+                                <tr>
+                                    <th class="product-thumbnail">&nbsp;</th>
+                                    <th class="product-name">Product</th>
+                                    <th class="product-price">Price</th>
+                                    <th class="product-quantity">Quantity</th>
+                                    <th class="product-subtotal">Subtotal</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {{#orderCartList}}
+                                <tr class="cart_item">
+                                    <td class="product-thumbnail">
+                                        <a href="/single-product/{{productId}}"><img width="145" height="145" alt="{{productName}}" class="shop_thumbnail" src="/img/book.jpg"></a>
+                                    </td>
+
+                                    <td class="product-name">
+                                        <a href="/single-product/{{productId}}">{{productName}}</a>
+                                    </td>
+
+                                    <td class="product-price">
+                                        <span class="amount">({{currencyCode}}){{price}}</span>
+                                    </td>
+
+                                    <td class="product-quantity">
+                                        <span class="qty-display">{{quantity}}</span>
+                                    </td>
+
+                                    <td class="product-subtotal">
+                                        <span class="amount">({{currencyCode}}){{totalPrice}}</span>
+                                    </td>
+                                </tr>
+                                {{/orderCartList}}
+                                <tr>
+                                    <td class="actions" colspan="5"> <div style="text-align: right; margin-bottom: 10px;">
+                                        <strong>Order Total:</strong>
+                                        <span class="amount">({{currencyCode}}){{totalOrderAmount}}</span>
+                                    </div>
+                                        <form method="post" action="/order/refund" style="display: inline-block;">
+                                            <input type="hidden" name="orderId" value="{{orderId}}">
+                                            <input type="submit" value="Refund Order" name="proceed" class="checkout-button button alt wc-forward">
+                                        </form>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    {{/orderList}}
+                    {{^orderList}}
+                        <h2 style="text-align: center; color: #555;">No orders found.</h2>
+                    {{/orderList}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{>fragments/footer}}
