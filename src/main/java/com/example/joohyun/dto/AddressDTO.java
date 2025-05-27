@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddressDTO {
-    private Long id;
+    private Long addrDTOId;
     private String shippingFirstName;
     private String shippingLastName;
     private String shippingCompany;
@@ -43,7 +43,7 @@ public class AddressDTO {
             return null;
         }
         AddressDTO dto = new AddressDTO();
-        dto.setId(address.getId());
+        dto.setAddrDTOId(address.getId());
         dto.setShippingFirstName(address.getShippingFirstName());
         dto.setShippingLastName(address.getShippingLastName());
         dto.setShippingCompany(address.getShippingCompany());

@@ -1,0 +1,55 @@
+{{>fragments/header}}
+
+<div style="text-align: center; padding: 10%" >
+    <h1>Confirm your order?</h1>
+    <form method="post" action="/payment">
+    <input type="submit" value="PLACE ORDER"
+           onclick='dataLayer.push({ecommerce: null});
+                    dataLayer.push({
+                    event: "add_shipping_info",
+                    ecommerce: {
+                        value: {{cartSubtotal}},
+                        currency: "{{currency}}",
+                        items: [
+                        {{#cartList}}
+                            {
+                            item_id: "{{product.pid}}",
+                            item_name: "{{product.pname}}",
+                            item_brand: "{{product.brand}}",
+                            item_category: "{{product.category1}}",
+                            item_category2: "{{product.category2}}",
+                            price: {{product.price}},
+                            quantity: {{quantity}}
+                            },
+                        {{/cartList}}
+                        ]
+                    }
+                });'>
+    </form>
+</div>
+
+<script>
+    dataLayer.push({ecommerce: null});
+    dataLayer.push({
+        event: 'begin_checkout',
+        ecommerce: {
+            currency: '{{currency}}',
+            value: {{cartSubtotal}},
+            items: [
+                {{#cartList}}
+                {
+                    item_id: '{{product.pid}}',
+                    item_name: '{{product.pname}}',
+                    item_brand: '{{product.brand}}',
+                    item_category: '{{product.category1}}',
+                    item_category2: '{{product.category2}}',
+                    price: {{product.price}},
+                    quantity: {{quantity}}
+                },
+                {{/cartList}}
+            ]
+        }
+    });
+</script>
+
+{{>fragments/footer}}

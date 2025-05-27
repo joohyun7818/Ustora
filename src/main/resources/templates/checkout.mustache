@@ -51,12 +51,12 @@
                                                     <p style="margin: 5px 0;">{{shippingCountry}}</p>
                                                 </div>
                                                 <div class="address-actions" style="margin-top: 10px;">
-                                                    <form method="post" action="/address/set-default/{{id}}?redirectUrl=/checkout" style="display: inline-block;">
+                                                    <form method="post" action="/address/set-default/{{addrDTOId}}?redirectUrl=/checkout" style="display: inline-block;">
                                                         <button type="submit" class="button" {{#isDefault}}disabled{{/isDefault}}>
                                                             {{#isDefault}}Set as Default{{/isDefault}}{{^isDefault}}Set as Default{{/isDefault}}
                                                         </button>
                                                     </form>
-                                                    <form method="post" action="/address/delete/{{id}}?redirectUrl=/checkout" style="display: inline-block;">
+                                                    <form method="post" action="/address/delete/{{addrDTOId}}?redirectUrl=/checkout" style="display: inline-block;">
                                                         <button type="submit" class="button" onclick="return confirm('Are you sure you want to delete this address?')">Delete</button>
                                                     </form>
                                                 </div>

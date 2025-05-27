@@ -1,5 +1,6 @@
 package com.example.joohyun.entity;
 
+import com.example.joohyun.dto.AddressDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,6 +34,10 @@ public class Order {
 
     @Column(nullable = false, length = 3) // ISO 4217 코드 (예: KRW, USD)를 위해 3글자로 제한
     private String currencyCode;
+
+    @Embedded
+    private AddressDTO shippingAddress;
+
 
     public void addOrderDetail(OrderDetail orderDetail) {
         orderDetails.add(orderDetail);

@@ -1,5 +1,6 @@
 package com.example.joohyun.entity;
 
+import com.example.joohyun.dto.AddressDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,8 +30,6 @@ public class OrderDetail {
 
     @Column(nullable = false)
     private int priceAtOrder; // 주문 당시의 상품 단가
-
-
 
     public OrderDetail(Order order, Product product, int quantity, int priceAtOrder) {
         this.order = order;

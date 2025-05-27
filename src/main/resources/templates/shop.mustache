@@ -1,4 +1,3 @@
-{{! src/main/resources/templates/shop.mustache }}
 {{>fragments/header}}
 
 <div class="product-big-title-area">
@@ -82,5 +81,24 @@
         </div>
     </div>
 </div>
+<script>
+    dataLayer.push({ ecommerce: null });  // Clear the previous ecommerce object.
+    dataLayer.push({
+        event: "view_item_list",
+        ecommerce: {
+            item_list_id: "{{currentPage}}",
+            item_list_name: "{{currentPage}} / {{totalPages}}",
+            items: [
+            {{#products}}
+                {
+                    item_id: "{{pid}}",
+                    item_name: "{{pname}}",
+                },
+            {{/products}}
+            ]
+        }
+    });
+</script>
+
 
 {{>fragments/footer}}

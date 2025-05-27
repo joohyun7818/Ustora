@@ -57,7 +57,7 @@ public class PageController {
         model.addAttribute("productPage", productPage);
         model.addAttribute("products", productPage.getContent());
 
-        model.addAttribute("currentPage", productPage.getNumber());
+        model.addAttribute("currentPage", productPage.getNumber() + 1);
         model.addAttribute("totalPages", productPage.getTotalPages());
         model.addAttribute("totalElements", productPage.getTotalElements());
         model.addAttribute("hasPrevious", productPage.hasPrevious());
@@ -94,7 +94,7 @@ public class PageController {
         model.addAttribute("user", userDTO);
         model.addAttribute("orderList", orderService.getOrderListByUserEmail(userEmail));
 
-        AddressDTO userDefaultAddress = addressService.getDefaultAddress((String) session.getAttribute("userEmail"));
+        AddressDTO userDefaultAddress = addressService.getDefaultAddress(userEmail);
         if (userDefaultAddress != null) {
             model.addAttribute("userDefaultAddress", userDefaultAddress);
         }else{
@@ -119,7 +119,6 @@ public class PageController {
             return "redirect:/loginPage";
         }
 
-
         int subtotal = (int) model.getAttribute("cartSubtotal");
         if (subtotal == 0) {
             model.addAttribute("emptyCart", "yes");
@@ -131,12 +130,24 @@ public class PageController {
             redirectAttributes.addFlashAttribute("noDefaultAddress", "Please set your default address.");
             return "redirect:/checkout";
         }
+        
+        return "paymentPage";
+    }
 
+    @PostMapping("/payment")
+    public String payment(Model model, HttpSession session) {
+        session.setAttribute("orderComplete", "complete");
         return "redirect:/thankyou";
     }
 
     @GetMapping("/thankyou")
     public String thankyou(Model model, HttpSession session) {
+        String orderComplete = (String) session.getAttribute("orderComplete");
+        if (orderComplete == null || orderComplete.isEmpty()) {
+            return "redirect:/checkout";
+        }
+        session.removeAttribute("orderComplete");
+
         if (!isUserLoggedIn(session)) {
             return "redirect:/loginPage";
         }
@@ -144,6 +155,8 @@ public class PageController {
         String userEmail = (String) session.getAttribute("userEmail");
         String orderCurrency = (String) model.getAttribute("currency");
         Order order = orderService.createOrder(userService.loggedinUser(userEmail), orderCurrency);
+        AddressDTO addressAtOrder = addressService.getDefaultAddress(userEmail);
+        order.setShippingAddress(addressAtOrder);
         model.addAttribute("order", order);
         return "thankyou";
     }

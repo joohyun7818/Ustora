@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.42, for macos15.2 (arm64)
+-- MySQL dump 10.13  Distrib 5.7.24, for osx11.1 (x86_64)
 --
 -- Host: localhost    Database: demo
 -- ------------------------------------------------------
@@ -7,7 +7,7 @@
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8mb4 */;
+/*!40101 SET NAMES utf8 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -21,7 +21,7 @@
 
 DROP TABLE IF EXISTS `Address`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Address` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `isDefault` bit(1) NOT NULL,
@@ -57,7 +57,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Cart`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Cart` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `pid` bigint NOT NULL,
@@ -69,7 +69,7 @@ CREATE TABLE `Cart` (
   KEY `FK4tlqx5k1efflajyoi8jxt4rcj` (`email`),
   CONSTRAINT `FK4tlqx5k1efflajyoi8jxt4rcj` FOREIGN KEY (`email`) REFERENCES `users` (`email`),
   CONSTRAINT `FKc6jxria5ahpqh0g7n6yrxnqqy` FOREIGN KEY (`pid`) REFERENCES `product` (`pid`)
-) ENGINE=InnoDB AUTO_INCREMENT=90 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=114 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -88,7 +88,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `order_details`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `order_details` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `priceAtOrder` int NOT NULL,
@@ -100,7 +100,7 @@ CREATE TABLE `order_details` (
   KEY `FKnke45esdppjcq6w0yx0idr2n0` (`product_pid`),
   CONSTRAINT `FKjyu2qbqt8gnvno9oe9j2s2ldk` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
   CONSTRAINT `FKnke45esdppjcq6w0yx0idr2n0` FOREIGN KEY (`product_pid`) REFERENCES `product` (`pid`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -109,7 +109,7 @@ CREATE TABLE `order_details` (
 
 LOCK TABLES `order_details` WRITE;
 /*!40000 ALTER TABLE `order_details` DISABLE KEYS */;
-INSERT INTO `order_details` VALUES (8,19000,1,5,3),(9,14800,1,5,316),(10,16000,1,5,1),(11,16500,1,6,11),(12,16000,4,6,12),(13,29000,3,6,223),(14,21000,1,6,227),(18,19000,4,9,2),(22,19000,1,11,2),(26,16000,1,13,476),(27,14000,2,13,475),(28,19000,1,13,2),(29,16000,1,14,97),(30,14000,1,15,475),(31,14000,1,16,475),(32,16000,1,16,476),(33,14000,1,17,475),(35,19000,1,19,2),(36,14800,1,20,19),(37,16800,3,20,6),(38,13500,1,21,232);
+INSERT INTO `order_details` VALUES (8,19000,1,5,3),(9,14800,1,5,316),(10,16000,1,5,1),(11,16500,1,6,11),(12,16000,4,6,12),(13,29000,3,6,223),(14,21000,1,6,227),(18,19000,4,9,2),(22,19000,1,11,2),(26,16000,1,13,476),(27,14000,2,13,475),(28,19000,1,13,2),(29,16000,1,14,97),(30,14000,1,15,475),(31,14000,1,16,475),(32,16000,1,16,476),(35,19000,1,19,2),(38,13500,1,21,232),(42,11000,1,24,226),(48,25000,1,27,7),(52,14800,1,29,19),(53,16800,3,29,6),(54,25000,2,29,7),(55,13000,1,29,253),(56,14800,1,29,316);
 /*!40000 ALTER TABLE `order_details` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -119,16 +119,27 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `orders`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `orders` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `currencyCode` varchar(3) NOT NULL,
   `orderDate` datetime(6) DEFAULT NULL,
   `user_email` varchar(255) NOT NULL,
+  `addrDTOId` bigint DEFAULT NULL,
+  `isDefault` bit(1) DEFAULT NULL,
+  `shippingAddress1` varchar(255) DEFAULT NULL,
+  `shippingAddress2` varchar(255) DEFAULT NULL,
+  `shippingCity` varchar(255) DEFAULT NULL,
+  `shippingCompany` varchar(255) DEFAULT NULL,
+  `shippingCountry` varchar(255) DEFAULT NULL,
+  `shippingFirstName` varchar(255) DEFAULT NULL,
+  `shippingLastName` varchar(255) DEFAULT NULL,
+  `shippingPostcode` varchar(255) DEFAULT NULL,
+  `shippingState` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKmxobdyrbi5tlk6ajxlnb8iopp` (`user_email`),
   CONSTRAINT `FKmxobdyrbi5tlk6ajxlnb8iopp` FOREIGN KEY (`user_email`) REFERENCES `users` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -137,7 +148,7 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
-INSERT INTO `orders` VALUES (5,'KRW','2025-05-26 11:31:55.156629','dlawngus7818@gmail.com'),(6,'KRW','2025-05-26 11:32:22.860942','dlawngus7818@gmail.com'),(9,'INR','2025-05-26 15:04:08.920904','dlawngus7818@gmail.com'),(11,'KRW','2025-05-26 15:24:12.631266','jh7818@naver.com'),(13,'KRW','2025-05-26 16:04:07.289431','jh7818@naver.com'),(14,'KRW','2025-05-26 16:07:02.173416','jh7818@naver.com'),(15,'KRW','2025-05-26 16:15:09.984479','jh7818@naver.com'),(16,'KRW','2025-05-26 16:17:02.715559','jh7818@naver.com'),(17,'KRW','2025-05-26 16:49:19.684189','dlawngus7818@gmail.com'),(19,'KRW','2025-05-26 17:09:22.040039','dlawngus7818@gmail.com'),(20,'KRW','2025-05-27 01:22:55.696715','dlawngus7818@gmail.com'),(21,'KRW','2025-05-27 02:55:24.650618','dd@naver.com');
+INSERT INTO `orders` VALUES (5,'KRW','2025-05-26 11:31:55.156629','dlawngus7818@gmail.com',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(6,'KRW','2025-05-26 11:32:22.860942','dlawngus7818@gmail.com',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(9,'INR','2025-05-26 15:04:08.920904','dlawngus7818@gmail.com',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11,'KRW','2025-05-26 15:24:12.631266','jh7818@naver.com',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(13,'KRW','2025-05-26 16:04:07.289431','jh7818@naver.com',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(14,'KRW','2025-05-26 16:07:02.173416','jh7818@naver.com',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(15,'KRW','2025-05-26 16:15:09.984479','jh7818@naver.com',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(16,'KRW','2025-05-26 16:17:02.715559','jh7818@naver.com',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(19,'KRW','2025-05-26 17:09:22.040039','dlawngus7818@gmail.com',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(21,'KRW','2025-05-27 02:55:24.650618','dd@naver.com',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(24,'KRW','2025-05-27 07:27:55.639815','dlawngus7818@gmail.com',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(27,'KRW','2025-05-27 09:42:45.175222','dlawngus7818@gmail.com',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(29,'KRW','2025-05-27 11:32:31.167010','dlawngus7818@gmail.com',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -147,7 +158,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `product`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `product` (
   `pid` bigint NOT NULL AUTO_INCREMENT,
   `author` varchar(255) DEFAULT NULL,
@@ -176,7 +187,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
   `email` varchar(255) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -204,4 +215,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-27 12:06:01
+-- Dump completed on 2025-05-27 20:35:13
