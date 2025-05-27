@@ -21,29 +21,6 @@ public class ProductService {
         return productRepository.findRandomProductsNative(count);
     }
 
-    public List<Product> top4productList() {
-        List<Product> pList = productRepository.findTop4ByOrderByPid();
-        for (Product p : pList) {
-            System.out.println(p.toString());
-        }
-        return pList;
-    }
-
-    public List<Product> top5recentList() {
-        List<Product> rList = productRepository.findTop5ByOrderByPidDesc();
-        return rList;
-    }
-
-    public List<Product> top3expensiveList() {
-        List<Product> exList = productRepository.findTop3ByOrderByPriceDesc();
-        return exList;
-    }
-
-    public List<Product> top6expensiveList() {
-        List<Product> ex6List = productRepository.findTop6ByOrderByPriceDesc();
-        return ex6List;
-    }
-
     public Page<Product> getAllProducts(int pageNum, int pageSize, String sortBy, String sortDir) {
         Sort sort = Sort.by(sortBy);
         if ("desc".equalsIgnoreCase(sortDir)) {

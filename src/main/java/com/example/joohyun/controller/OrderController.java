@@ -1,32 +1,37 @@
 package com.example.joohyun.controller;
 
 import com.example.joohyun.dto.OrderDTO;
+import com.example.joohyun.dto.UserDTO;
+import com.example.joohyun.entity.Address;
 import com.example.joohyun.service.OrderService;
+import com.example.joohyun.service.UserService;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 public class OrderController {
-    @Autowired
-    private OrderService orderService;
+    private final OrderService orderService;
+    private final UserService userService;
 
     @GetMapping("/orderList")
-    public String getOrderList(HttpSession session, Model model) {
-        String userEmail = (String) session.getAttribute("userEmail");
+    public String orderList(@SessionAttribute(value = "userEmail", required = false) String userEmail, Model model) {
         if (userEmail == null) {
             return "redirect:/loginPage";
         }
         try {
-            List<OrderDTO> orderList = orderService.getOrderListByUserEmail(userEmail);
-            model.addAttribute("orderList", orderList);
+            UserDTO userDTO = userService.convertToDTO(userService.findByEmail(userEmail));
+            model.addAttribute("user", userDTO);
+            model.addAttribute("orderList", orderService.getOrderListByUserEmail(userEmail));
             return "orderDetail";
         } catch (IllegalArgumentException e) {
             return "redirect:/loginPage";

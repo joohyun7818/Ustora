@@ -57,16 +57,17 @@
                     <div class="col-md-8">
                         <div class="user-menu">
                             <ul>
+                                {{#isLoggedIn}}
                                 <li><a href="/orderList"><i class="fa fa-user"></i> My Account</a></li>
                                 <li><a href="#"><i class="fa fa-heart"></i> Wishlist</a></li>
                                 <li><a href="/cart"><i class="fa fa-user"></i> My Cart</a></li>
                                 <li><a href="/checkout"><i class="fa fa-user"></i> Checkout</a></li>
-                                {{^userName}}
-                                <li><a href="/loginPage"><i class="fa fa-user"></i> Login</a></li>
-                                {{/userName}}
-                                {{#userName}}
                                 <li><a href="/logout"><i class="fa fa-user"></i> Logout</a></li>
-                                {{/userName}}
+                                {{/isLoggedIn}}
+                                {{^isLoggedIn}}
+                                <li><a href="/loginPage"><i class="fa fa-user"></i> Login</a></li>
+                                <li><a href="/signupPage"><i class="fa fa-user"></i> Sign Up</a></li>
+                                {{/isLoggedIn}}
                             </ul>
                         </div>
                     </div>

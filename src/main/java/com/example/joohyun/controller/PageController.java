@@ -1,12 +1,9 @@
 package com.example.joohyun.controller;
 
-import com.example.joohyun.entity.Cart;
-import com.example.joohyun.entity.Order;
-import com.example.joohyun.entity.Product;
-import com.example.joohyun.service.CartService;
-import com.example.joohyun.service.UserService;
-import com.example.joohyun.service.OrderService;
-import com.example.joohyun.service.ProductService;
+import com.example.joohyun.dto.AddressDTO;
+import com.example.joohyun.dto.UserDTO;
+import com.example.joohyun.entity.*;
+import com.example.joohyun.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +29,12 @@ public class PageController {
     private CartService cartService;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private AddressService addressService;
+
+    private boolean isUserLoggedIn(HttpSession session) {
+        return session.getAttribute("userEmail") != null;
+    }
 
     @GetMapping("/")
     public String index(Model model) {
@@ -75,38 +79,71 @@ public class PageController {
 
     @GetMapping("/checkout")
     public String checkout(Model model, HttpSession session) {
-        String loggedin = "False";
-        String userEmail = (String) session.getAttribute("userEmail");
-        if (userEmail != null) {
-            loggedin = "True";
+        if (!isUserLoggedIn(session)) {
+            return "redirect:/loginPage";
         }
         model.addAttribute("title", "Checkout- ");
+
+        String userEmail = (String) session.getAttribute("userEmail");
         List<Cart> userCart = cartService.userCartList(userEmail);
         model.addAttribute("cartList", userCart);
         int cartSubtotal = cartService.cartSubtotal(userEmail);
         model.addAttribute("cartSubtotal", cartSubtotal);
-        return "redirect:/checkoutPage?loggedin=" + loggedin;
+
+        UserDTO userDTO = userService.convertToDTO(userService.findByEmail(userEmail));
+        model.addAttribute("user", userDTO);
+        model.addAttribute("orderList", orderService.getOrderListByUserEmail(userEmail));
+
+        AddressDTO userDefaultAddress = addressService.getDefaultAddress((String) session.getAttribute("userEmail"));
+        if (userDefaultAddress != null) {
+            model.addAttribute("userDefaultAddress", userDefaultAddress);
+        }else{
+            model.addAttribute("userDefaultAddress", false);
+        }
+
+        return "checkout";
     }
 
     @GetMapping("/checkoutPage")
     public String checkoutPage(Model model, HttpSession session) {
-        return "checkout";
+        if (!isUserLoggedIn(session)) {
+            return "redirect:/loginPage";
+        }
+
+        return "redirect:/checkout";
     }
 
     @PostMapping("/checkout")
-    public String thankyou(Model model, HttpSession session) {
+    public String processCheckout(Model model, HttpSession session, RedirectAttributes redirectAttributes) {
+        if (!isUserLoggedIn(session)) {
+            return "redirect:/loginPage";
+        }
+
+
         int subtotal = (int) model.getAttribute("cartSubtotal");
-        if ( subtotal == 0 ){
+        if (subtotal == 0) {
             model.addAttribute("emptyCart", "yes");
             return "cart";
         }
+
+        AddressDTO userDefaultAddress = addressService.getDefaultAddress((String) session.getAttribute("userEmail"));
+        if (userDefaultAddress == null) {
+            redirectAttributes.addFlashAttribute("noDefaultAddress", "Please set your default address.");
+            return "redirect:/checkout";
+        }
+
         return "redirect:/thankyou";
     }
 
     @GetMapping("/thankyou")
-    public String thankyou(Model model) {
+    public String thankyou(Model model, HttpSession session) {
+        if (!isUserLoggedIn(session)) {
+            return "redirect:/loginPage";
+        }
+
+        String userEmail = (String) session.getAttribute("userEmail");
         String orderCurrency = (String) model.getAttribute("currency");
-        Order order = orderService.createOrder(userService.loggedinUser((String)model.getAttribute("userEmail")), orderCurrency);
+        Order order = orderService.createOrder(userService.loggedinUser(userEmail), orderCurrency);
         model.addAttribute("order", order);
         return "thankyou";
     }
@@ -114,6 +151,9 @@ public class PageController {
     @GetMapping("/cart")
     public String cart(Model model, HttpSession session) {
         model.addAttribute("title", "Cart- ");
+        if (!isUserLoggedIn(session)) {
+            return "redirect:/loginPage";
+        }
         return "cart";
     }
 

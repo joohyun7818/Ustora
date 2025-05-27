@@ -23,9 +23,15 @@ public class GlobalModelAttribute {
     public void addUserNameToModel(HttpSession session, Model model) {
         String userName = (String) session.getAttribute("userName");
         String userEmail = (String) session.getAttribute("userEmail");
-        if (userName != null) {
+        boolean isLoggedIn = userName != null && userEmail != null;
+        
+        model.addAttribute("isLoggedIn", isLoggedIn);
+        if (isLoggedIn) {
             model.addAttribute("userName", userName);
             model.addAttribute("userEmail", userEmail);
+        } else {
+            model.addAttribute("userName", null);
+            model.addAttribute("userEmail", null);
         }
     }
 
@@ -35,7 +41,7 @@ public class GlobalModelAttribute {
         if (top3List != null) {
             model.addAttribute("top3List", top3List);
         } else if (top3List == null || top3List.isEmpty()) {
-            top3List = productService.top3expensiveList();
+            top3List = productService.findRandomByCount(3);
             session.setAttribute("top3List", top3List);
             model.addAttribute("top3List", top3List);
         }
@@ -44,7 +50,7 @@ public class GlobalModelAttribute {
         if (top4List != null) {
             model.addAttribute("top4List", top4List);
         } else if (top4List == null || top4List.isEmpty()) {
-            top4List = productService.top4productList();
+            top4List = productService.findRandomByCount(4);
             session.setAttribute("top4List", top4List);
             model.addAttribute("top4List", top4List);
         }
@@ -53,7 +59,7 @@ public class GlobalModelAttribute {
         if (top5List != null) {
             model.addAttribute("top5List", top5List);
         } else if (top5List == null || top5List.isEmpty()) {
-            top5List = productService.top5recentList();
+            top5List = productService.findRandomByCount(5);
             session.setAttribute("top5List", top5List);
             model.addAttribute("top5List", top5List);
         }
@@ -62,16 +68,13 @@ public class GlobalModelAttribute {
         if (top6List != null) {
             model.addAttribute("top6List", top6List);
         } else if (top6List == null || top6List.isEmpty()) {
-            top6List = productService.top6expensiveList();
+            top6List = productService.findRandomByCount(6);
             session.setAttribute("top6List", top6List);
             model.addAttribute("top6List", top6List);
         }
 
         List<Product> interestedProducts = new ArrayList<>();
-        Product product1 = ((List<Product>) session.getAttribute("top5List")).get(0);
-        Product product2 = ((List<Product>) session.getAttribute("top5List")).get(1);
-        interestedProducts.add(product1);
-        interestedProducts.add(product2);
+        interestedProducts = productService.findRandomByCount(2);
         model.addAttribute("interestedProducts", interestedProducts);
     }
 

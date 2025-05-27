@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,11 +54,13 @@ public class CartService {
 
     public List<Cart> userCartList(String userEmail){
         if(userEmail == null){
-            return null;
+            return new ArrayList<>();
         }
         User user = userRepository.findById(userEmail).orElse(null);
-        List<Cart> myCartList = cartRepository.findByUser(user);
-        return myCartList;
+        if (user == null) {
+            return new ArrayList<>();
+        }
+        return cartRepository.findByUser(user);
     }
 
     public int cartSubtotal(String userEmail){
@@ -78,7 +81,7 @@ public class CartService {
         }
         List<Cart> cartList = userCartList(userEmail);
         int count = 0;
-        for(Cart cart : userCartList(userEmail)){
+        for(Cart cart : cartList){
             count += cart.getQuantity() > 0 ? cart.getQuantity() : 0;
         }
         return count;
