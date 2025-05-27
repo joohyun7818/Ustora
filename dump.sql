@@ -16,6 +16,42 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `Address`
+--
+
+DROP TABLE IF EXISTS `Address`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Address` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `isDefault` bit(1) NOT NULL,
+  `shippingAddress1` varchar(255) DEFAULT NULL,
+  `shippingAddress2` varchar(255) DEFAULT NULL,
+  `shippingCity` varchar(255) DEFAULT NULL,
+  `shippingCompany` varchar(255) DEFAULT NULL,
+  `shippingCountry` varchar(255) DEFAULT NULL,
+  `shippingFirstName` varchar(255) DEFAULT NULL,
+  `shippingLastName` varchar(255) DEFAULT NULL,
+  `shippingPostcode` varchar(255) DEFAULT NULL,
+  `shippingState` varchar(255) DEFAULT NULL,
+  `user_id` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKfmbstuufapi4tvs7epqq1q0pq` (`user_id`),
+  CONSTRAINT `FKfmbstuufapi4tvs7epqq1q0pq` FOREIGN KEY (`user_id`) REFERENCES `users` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Address`
+--
+
+LOCK TABLES `Address` WRITE;
+/*!40000 ALTER TABLE `Address` DISABLE KEYS */;
+INSERT INTO `Address` VALUES (1,_binary '\0','Seocho-gu','','Seoul','Dongyang','KR','Joohyun','Lim','111111','Seoul','dlawngus7818@gmail.com'),(2,_binary '\0','서울특별시 서초구 우면동','대림아파트 106 - 101','서울특별시','','KR','Joohyun','Lim','06762','Seocho-gu','dlawngus7818@gmail.com'),(9,_binary '','서울특별시 서초구 우면동','대림아파트 106 - 101','서울특별시','','KR','Joohyun','Lim','06762','Seocho-gu','jh7818@naver.com'),(10,_binary '','Fernández Anchorena Palace','','Av. Alvear','','AR','Joohyun','Lim','C1014AAD','Ciudad Autónoma de Buenos Aires','dlawngus7818@gmail.com');
+/*!40000 ALTER TABLE `Address` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `Cart`
 --
 
@@ -33,7 +69,7 @@ CREATE TABLE `Cart` (
   KEY `FK4tlqx5k1efflajyoi8jxt4rcj` (`email`),
   CONSTRAINT `FK4tlqx5k1efflajyoi8jxt4rcj` FOREIGN KEY (`email`) REFERENCES `users` (`email`),
   CONSTRAINT `FKc6jxria5ahpqh0g7n6yrxnqqy` FOREIGN KEY (`pid`) REFERENCES `product` (`pid`)
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=90 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +78,7 @@ CREATE TABLE `Cart` (
 
 LOCK TABLES `Cart` WRITE;
 /*!40000 ALTER TABLE `Cart` DISABLE KEYS */;
-INSERT INTO `Cart` VALUES (6,476,'limjh7818@m365.dongyang.ac.kr',1,16000),(53,2,'jh7818@naver.com',1,19000);
+INSERT INTO `Cart` VALUES (6,476,'limjh7818@m365.dongyang.ac.kr',1,16000),(89,295,'dd@naver.com',2,24000);
 /*!40000 ALTER TABLE `Cart` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -64,7 +100,7 @@ CREATE TABLE `order_details` (
   KEY `FKnke45esdppjcq6w0yx0idr2n0` (`product_pid`),
   CONSTRAINT `FKjyu2qbqt8gnvno9oe9j2s2ldk` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
   CONSTRAINT `FKnke45esdppjcq6w0yx0idr2n0` FOREIGN KEY (`product_pid`) REFERENCES `product` (`pid`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -73,7 +109,7 @@ CREATE TABLE `order_details` (
 
 LOCK TABLES `order_details` WRITE;
 /*!40000 ALTER TABLE `order_details` DISABLE KEYS */;
-INSERT INTO `order_details` VALUES (8,19000,1,5,3),(9,14800,1,5,316),(10,16000,1,5,1),(11,16500,1,6,11),(12,16000,4,6,12),(13,29000,3,6,223),(14,21000,1,6,227);
+INSERT INTO `order_details` VALUES (8,19000,1,5,3),(9,14800,1,5,316),(10,16000,1,5,1),(11,16500,1,6,11),(12,16000,4,6,12),(13,29000,3,6,223),(14,21000,1,6,227),(18,19000,4,9,2),(22,19000,1,11,2),(26,16000,1,13,476),(27,14000,2,13,475),(28,19000,1,13,2),(29,16000,1,14,97),(30,14000,1,15,475),(31,14000,1,16,475),(32,16000,1,16,476),(33,14000,1,17,475),(35,19000,1,19,2),(36,14800,1,20,19),(37,16800,3,20,6),(38,13500,1,21,232);
 /*!40000 ALTER TABLE `order_details` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -92,7 +128,7 @@ CREATE TABLE `orders` (
   PRIMARY KEY (`id`),
   KEY `FKmxobdyrbi5tlk6ajxlnb8iopp` (`user_email`),
   CONSTRAINT `FKmxobdyrbi5tlk6ajxlnb8iopp` FOREIGN KEY (`user_email`) REFERENCES `users` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -101,7 +137,7 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
-INSERT INTO `orders` VALUES (5,'KRW','2025-05-26 11:31:55.156629','dlawngus7818@gmail.com'),(6,'KRW','2025-05-26 11:32:22.860942','dlawngus7818@gmail.com');
+INSERT INTO `orders` VALUES (5,'KRW','2025-05-26 11:31:55.156629','dlawngus7818@gmail.com'),(6,'KRW','2025-05-26 11:32:22.860942','dlawngus7818@gmail.com'),(9,'INR','2025-05-26 15:04:08.920904','dlawngus7818@gmail.com'),(11,'KRW','2025-05-26 15:24:12.631266','jh7818@naver.com'),(13,'KRW','2025-05-26 16:04:07.289431','jh7818@naver.com'),(14,'KRW','2025-05-26 16:07:02.173416','jh7818@naver.com'),(15,'KRW','2025-05-26 16:15:09.984479','jh7818@naver.com'),(16,'KRW','2025-05-26 16:17:02.715559','jh7818@naver.com'),(17,'KRW','2025-05-26 16:49:19.684189','dlawngus7818@gmail.com'),(19,'KRW','2025-05-26 17:09:22.040039','dlawngus7818@gmail.com'),(20,'KRW','2025-05-27 01:22:55.696715','dlawngus7818@gmail.com'),(21,'KRW','2025-05-27 02:55:24.650618','dd@naver.com');
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -155,7 +191,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('','',''),('dlawngus7818@gmail.com','joohyun','dddd'),('jh7818@naver.com','joohyun','jh7818'),('limjh7818@m365.dongyang.ac.kr','jh','1111');
+INSERT INTO `users` VALUES ('','',''),('dd@naver.com','dddd','dddd'),('dlawngus7818@gmail.com','joohyun','dddd'),('jh7818@naver.com','joohyun','jh7818'),('limjh7818@m365.dongyang.ac.kr','jh','1111');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -168,4 +204,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-26 20:33:44
+-- Dump completed on 2025-05-27 12:06:01
