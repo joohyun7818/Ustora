@@ -1,6 +1,7 @@
 package com.example.joohyun.controller;
 
 import com.example.joohyun.dto.AddressDTO;
+import com.example.joohyun.dto.CommentDTO;
 import com.example.joohyun.dto.UserDTO;
 import com.example.joohyun.entity.*;
 import com.example.joohyun.service.*;
@@ -31,6 +32,8 @@ public class PageController {
     private OrderService orderService;
     @Autowired
     private AddressService addressService;
+    @Autowired
+    private CommentService commentService;
 
     private boolean isUserLoggedIn(HttpSession session) {
         return session.getAttribute("userEmail") != null;
@@ -175,6 +178,8 @@ public class PageController {
         Product product = productService.findRandomByCount(1).getFirst();
         model.addAttribute("product", product);
         model.addAttribute("title", "Single Product- ");
+        List<CommentDTO> cmtList = commentService.findCommentList(product);
+        model.addAttribute("cmtList", cmtList);
         return "single-product";
     }
 
@@ -185,6 +190,8 @@ public class PageController {
             Product product = productOptional.get();
             model.addAttribute("title", product.getPname() + " - ");
             model.addAttribute("product", product);
+            List<CommentDTO> cmtList = commentService.findCommentList(product);
+            model.addAttribute("cmtList", cmtList);
             return "single-product";
         } else {
             return "error/404";

@@ -1,5 +1,72 @@
 {{>fragments/header}}
 
+<style>
+    .review-item {
+        margin-bottom: 15px !important;
+        padding: 10px !important;
+        background-color: #f9f9f9 !important;
+        border-radius: 5px !important;
+    }
+    
+    .review-header {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .review-author {
+        margin: 0 !important;
+        padding: 0 !important;
+        color: #333 !important;
+        font-size: 15px !important;
+        font-weight: 500 !important;
+    }
+    
+    .review-date {
+        color: #888 !important;
+        font-size: 12px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .review-content {
+        color: #666 !important;
+        line-height: 1.3 !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 3 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        word-break: break-word !important;
+        white-space: pre-wrap !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .review-content.expanded {
+        display: block !important;
+        -webkit-line-clamp: unset !important;
+    }
+    
+    .review-content p {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .more-btn {
+        background: none !important;
+        border: none !important;
+        color: #5a88de !important;
+        cursor: pointer !important;
+        padding: 2px 0 !important;
+        font-size: 13px !important;
+        margin: 2px 5px 0 0 !important;
+    }
+</style>
+
 <div class="product-big-title-area">
     <div class="container">
         <div class="row">
@@ -74,12 +141,43 @@
                                         </div>
                                         <div role="tabpanel" class="tab-pane fade" id="profile">
                                             <h2>Reviews</h2>
+                                            <hr>
+                                            {{#cmtList}}
+                                            <div class="comment-item">
+                                                <div class="review-item"><div class="review-header"><h3 class="review-author">{{nickname}}<span class="review-user" style="color: gray">{{uid}}</span></h3><div class="review-date">{{createdAt}}</div></div><div class="review-content" id="review-content-{{cid}}"><p>{{content}}</p></div><button class="more-btn" onclick="toggleReview({{cid}})">More</button>{{#isLoggedIn}}<button class="more-btn" onclick="toggleEditMode({{cid}}, '{{uid}}', this)">Edit</button><button class="more-btn" onclick="deleteReview({{cid}})">Delete</button>{{/isLoggedIn}}</div><hr>
+                                                {{#isLoggedIn}}
+                                                <div class="submit-review" style="display: none;">
+                                                    <h2>Edit Comment</h2>
+                                                    <input class="update-comment-product-id" name="product" type="text" value="{{pid}}" hidden>
+                                                    <input class="update-comment-user-id" name="user" type="text" value="{{userEmail}}" hidden>
+                                                    <input class="update-comment-comment-id" name="cid" type="text" value="{{cid}}" hidden>
+                                                    <p><label for="name">Name</label> <input class="update-comment-nickname" name="nickName" type="text" required></p>
+                                                    <div class="rating-chooser">
+                                                        <p>Your rating</p>
+                                                        <div class="rating-wrap-post">
+                                                            <i class="fa fa-star"></i>
+                                                            <i class="fa fa-star"></i>
+                                                            <i class="fa fa-star"></i>
+                                                            <i class="fa fa-star"></i>
+                                                            <i class="fa fa-star"></i>
+                                                        </div>
+                                                    </div>
+                                                    <p><label for="review">Your review</label> <textarea name="content" class="update-comment-content" cols="30" rows="10" required></textarea></p>
+                                                    <p><input class="comment-update-btn" type="submit" value="Submit" onclick="editComment(this)"></p>
+                                                    <hr>
+                                                </div>
+                                                {{/isLoggedIn}}
+                                            </div>
+                                            {{/cmtList}}
+
+                                            {{#isLoggedIn}}
                                             <div class="submit-review">
-                                                <p><label for="name">Name</label> <input name="name" type="text"></p>
-                                                <p><label for="email">Email</label> <input name="email" type="email"></p>
+                                                <h2>New Comment</h2>
+                                                <input id="new-comment-product-id" name="product" type="text" value="{{pid}}" hidden>
+                                                <input id="new-comment-user-id" name="user" type="text" value="{{userEmail}}" hidden>
+                                                <p><label for="name">Name</label> <input id="new-comment-nickname" name="nickName" type="text" required></p>
                                                 <div class="rating-chooser">
                                                     <p>Your rating</p>
-
                                                     <div class="rating-wrap-post">
                                                         <i class="fa fa-star"></i>
                                                         <i class="fa fa-star"></i>
@@ -88,9 +186,15 @@
                                                         <i class="fa fa-star"></i>
                                                     </div>
                                                 </div>
-                                                <p><label for="review">Your review</label> <textarea name="review" id="" cols="30" rows="10"></textarea></p>
-                                                <p><input type="submit" value="Submit"></p>
+                                                <p><label for="review">Your review</label> <textarea name="content" id="new-comment-content" cols="30" rows="10" required></textarea></p>
+                                                <p><input id="comment-create-btn" type="submit" value="Submit"></p>
                                             </div>
+                                            {{/isLoggedIn}}
+                                            {{^isLoggedIn}}
+                                            <div>
+                                                <a href="/loginPage">Login</a> or <a href="/signupPage">Register</a> to write a review.
+                                            </div>
+                                            {{/isLoggedIn}}
                                         </div>
                                     </div>
                                 </div>
@@ -149,6 +253,175 @@
             ]
         }
     });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // review-user-email 클래스를 가진 모든 요소를 가져옵니다.
+        var userEmailElements = document.querySelectorAll('.review-user');
+
+        userEmailElements.forEach(function(element) {
+            var fullEmail = element.textContent;
+
+            if (fullEmail && fullEmail.includes('@')) { // 이메일이 존재하고 '@' 기호를 포함하는지 확인
+                const parts = fullEmail.split('@'); // '@' 기호를 기준으로 문자열을 나눕니다.
+                let username = parts[0]; // 사용자 이름 부분 (예: aaa111)
+                const domain = parts[1]; // 도메인 부분 (예: gmail.com)
+
+                let maskedUsername = '';
+                if (username.length > 4) { // 사용자 이름이 4글자를 초과하면
+                    maskedUsername = username.substring(0, 4) + '*****'; // 앞 4글자 + '**'
+                } else { // 사용자 이름이 4글자 이하면 (예: aa@..)
+                    maskedUsername = username.substring(0, 2) + '*****'; // 앞 2글자 + '**' (적절히 조정)
+                    // 또는 단순히 username + '**' 로 할 수도 있습니다.
+                }
+
+                // 최종적으로 표시될 이메일 형식
+                element.textContent = `(${maskedUsername}@${domain})`;
+            } else if (fullEmail) {
+                // '@' 기호가 없거나 5글자 이하의 이메일인 경우 (예: test@a.c, short@d.kr)
+                // 여기서는 전체를 표시하거나, 더 간단한 마스킹 처리를 할 수 있습니다.
+                // 일단은 전체를 표시하는 방식으로 두겠습니다.
+                element.textContent = `(${fullEmail})`;
+            } else {
+                element.textContent = ''; // 이메일이 없는 경우
+            }
+        });
+    });
+
+    function toggleReview(cid) {
+        const content = document.getElementById(`review-content-${cid}`);
+        const btn = content.nextElementSibling;
+
+        if (content.classList.contains('expanded')) {
+            content.classList.remove('expanded');
+            btn.textContent = 'More';
+        } else {
+            content.classList.add('expanded');
+            btn.textContent = 'Less';
+        }
+    }
+
+    const commentCreateBtn = document.querySelector("#comment-create-btn");
+    commentCreateBtn.addEventListener("click", function() {
+        var nickname = document.querySelector("#new-comment-nickname").value;
+        var content = document.querySelector("#new-comment-content").value;
+        var pid = document.querySelector("#new-comment-product-id").value;
+        var uid = document.querySelector("#new-comment-user-id").value;
+        console.log(`nickname: ${nickname}, content: ${content}, pid: ${pid}`)
+        if (nickname === '' || content === '') {
+            alert('Please enter your nickname and comment.')
+        }else{
+            const comment = {
+                nickname: nickname,
+                content: content,
+                pid: pid,
+                uid: uid,
+            };
+            console.log(comment);
+
+            // fetch() - 비동기 통신을 위한 API
+            const url = "/api/comments/" + comment.pid;
+            fetch(url, {
+                method: "post",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(comment) //comment 객체를 JSON 문자열로 변환해 전송
+            }).then(response => {
+                // HTTP 응답 코드에 따른 메시지 출력
+                const msg = (response.ok) ? "댓글이 등록됐습니다." : "댓글 등록 실패..!";
+                alert(msg);
+                window.location.reload();
+            });
+        }
+    });
+
+    {{#isLoggedIn}}
+    function editComment(element) {
+        const commentItem = element.closest('.submit-review');
+        var nickname = commentItem.querySelector(".update-comment-nickname").value;
+        var content = commentItem.querySelector(".update-comment-content").value;
+        var cid = commentItem.querySelector(".update-comment-comment-id").value;
+        var uid = commentItem.querySelector(".update-comment-user-id").value;
+        console.log(`nickname: ${nickname}, content: ${content}, cid: ${cid}`)
+        if (nickname === '' || content === '') {
+            alert('Please enter your nickname and comment.')
+        }else{
+            const comment = {
+                nickname: nickname,
+                content: content,
+                cid: cid,
+                uid: uid,
+            };
+            console.log(comment);
+
+            const url = "/api/comments";
+            fetch(url, {
+                method: "put",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(comment) //comment 객체를 JSON 문자열로 변환해 전송
+            }).then(response => {
+                // HTTP 응답 코드에 따른 메시지 출력
+                const msg = (response.ok) ? "댓글이 수정됐습니다." : "댓글 수정 실패..!";
+                alert(msg);
+                window.location.reload();
+            });
+        }
+    }
+
+    function toggleEditMode(cid, uid, element) {
+        const commentItem = element.closest('.comment-item'); // 가장 가까운 .comment-item 부모 찾기
+        const editMode = commentItem.querySelector('.submit-review');
+        if (uid !== "{{userEmail}}"){
+            alert("작성자가 아닙니다.");
+            window.location.reload();
+        }
+
+        if (editMode.style.display === 'block') {
+            editMode.style.display = 'none';
+        } else {
+            const url = `/api/comments/${cid}`;
+            fetch(url, {
+                method: "GET",
+                headers: {"Content-Type": "application/json"},
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('댓글 정보를 가져오는데 실패했습니다.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // 폼 필드에 기존 댓글 정보 채우기
+                    commentItem.querySelector('.update-comment-comment-id').value = data.cid;
+                    commentItem.querySelector('.update-comment-nickname').value = data.nickname;
+                    commentItem.querySelector('.update-comment-content').value = data.content;
+
+                    editMode.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error("댓글 정보 가져오기 에러:", error);
+                    alert("댓글 정보를 가져오는데 실패했습니다.");
+                });
+        }
+    }
+
+    function deleteReview(cid) {
+        const content = {
+            cid: cid,
+            uid: "{{userEmail}}",
+        };
+        const url = "/api/comments";
+        fetch(url, {
+            method: "delete",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(content)
+        }).then(response => {
+            // HTTP 응답 코드에 따른 메시지 출력
+            const msg = (response.ok) ? "댓글이 삭제됐습니다." : "댓글 삭제 실패..!";
+            console.log(response);
+            alert(msg);
+            window.location.reload();
+        });
+    }
+    {{/isLoggedIn}}
 </script>
 
 {{>fragments/footer}}
