@@ -1,6 +1,9 @@
 package com.example.joohyun.repository;
 
-import com.example.joohyun.entity.Product;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,9 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
+import com.example.joohyun.entity.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "SELECT * FROM Product ORDER BY RAND() LIMIT :limitCount", nativeQuery = true)

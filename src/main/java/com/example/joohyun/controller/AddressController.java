@@ -1,14 +1,21 @@
 package com.example.joohyun.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.example.joohyun.entity.Address;
 import com.example.joohyun.entity.User;
 import com.example.joohyun.service.AddressService;
 import com.example.joohyun.service.UserService;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
@@ -22,7 +29,7 @@ public class AddressController {
     @PostMapping("/add")
     public String addAddress(@ModelAttribute Address address, 
                            @SessionAttribute(value = "userEmail", required = false) String userEmail,
-                           @RequestParam(required = false, defaultValue = "/orderList") String redirectUrl) {
+                           @RequestParam(name = "redirectUrl", required = false, defaultValue = "/orderList") String redirectUrl) {
         if (userEmail == null) {
             return "redirect:/loginPage";
         }
@@ -37,9 +44,9 @@ public class AddressController {
     }
 
     @PostMapping("/set-default/{addressId}")
-    public String setDefaultAddress(@PathVariable Long addressId, 
+    public String setDefaultAddress(@PathVariable(name = "addressId") Long addressId, 
                                   @SessionAttribute(value = "userEmail", required = false) String userEmail,
-                                  @RequestParam(required = false, defaultValue = "/orderList") String redirectUrl) {
+                                  @RequestParam(name = "redirectUrl", required = false, defaultValue = "/orderList") String redirectUrl) {
         if (userEmail == null) {
             return "redirect:/loginPage";
         }
@@ -52,9 +59,9 @@ public class AddressController {
     }
 
     @PostMapping("/delete/{addressId}")
-    public String deleteAddress(@PathVariable Long addressId, 
+    public String deleteAddress(@PathVariable(name = "addressId") Long addressId, 
                               @SessionAttribute(value = "userEmail", required = false) String userEmail,
-                              @RequestParam(required = false, defaultValue = "/orderList") String redirectUrl,
+                              @RequestParam(name = "redirectUrl", required = false, defaultValue = "/orderList") String redirectUrl,
                                 RedirectAttributes redirectAttributes) {
         if (userEmail == null) {
             return "redirect:/loginPage";
@@ -69,4 +76,4 @@ public class AddressController {
             return "redirect:/loginPage";
         }
     }
-} 
+}

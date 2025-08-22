@@ -9,6 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,11 +27,29 @@ public class GlobalModelAttribute {
         String userName = (String) session.getAttribute("userName");
         String userEmail = (String) session.getAttribute("userEmail");
         boolean isLoggedIn = userName != null && userEmail != null;
-        
+
         model.addAttribute("isLoggedIn", isLoggedIn);
         if (isLoggedIn) {
             model.addAttribute("userName", userName);
             model.addAttribute("userEmail", userEmail);
+
+            try {
+                MessageDigest digest = MessageDigest.getInstance("SHA-256");
+                byte[] encodedhash = digest.digest(userEmail.getBytes(StandardCharsets.UTF_8));
+                StringBuilder hexString = new StringBuilder(2 * encodedhash.length);
+                for (byte b : encodedhash) {
+                    String hex = Integer.toHexString(0xff & b);
+                    if (hex.length() == 1) {
+                        hexString.append('0');
+                    }
+                    hexString.append(hex);
+                }
+                model.addAttribute("hashedUserId", hexString.toString());
+            } catch (NoSuchAlgorithmException e) {
+                model.addAttribute("hashedUserId", "default_user_id_on_error");
+                // In a real application, you should log this error.
+            }
+
         } else {
             model.addAttribute("userName", null);
             model.addAttribute("userEmail", null);

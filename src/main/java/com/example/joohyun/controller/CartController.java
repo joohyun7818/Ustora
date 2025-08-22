@@ -1,9 +1,8 @@
 package com.example.joohyun.controller;
 
-import com.example.joohyun.entity.Cart;
-import com.example.joohyun.service.CartService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,8 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import com.example.joohyun.entity.Cart;
+import com.example.joohyun.service.CartService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class CartController {
@@ -20,13 +22,13 @@ public class CartController {
     private CartService cartService;
 
     @GetMapping("/cart/add/{pid}")
-    public String addToCart(@PathVariable Long pid, Model model, HttpSession session, HttpServletRequest request) {
+    public String addToCart(@PathVariable(name = "pid") Long pid, Model model, HttpSession session, HttpServletRequest request) {
         return cartQuantity(pid, 1, session, request);
 
     }
 
     @GetMapping("/cart/add/{pid}/quantity")
-    public String changeCartQuantity(@PathVariable Long pid, Model model, HttpSession session, @RequestParam String quantity, HttpServletRequest request) {
+    public String changeCartQuantity(@PathVariable(name = "pid") Long pid, Model model, HttpSession session, @RequestParam(name = "quantity") String quantity, HttpServletRequest request) {
         int num = 1;
         if (quantity != null) {
             num = Integer.parseInt(quantity);
@@ -35,7 +37,7 @@ public class CartController {
     }
 
     @GetMapping("/cart/add/{pid}/{quantity}")
-    public String cartQuantity(@PathVariable Long pid, @PathVariable int quantity, HttpSession session, HttpServletRequest request) {
+    public String cartQuantity(@PathVariable(name = "pid") Long pid, @PathVariable(name = "quantity") int quantity, HttpSession session, HttpServletRequest request) {
         String user = (String) session.getAttribute("userEmail");
         Cart addedCartItem = cartService.addItemCart(user, pid, quantity);
 
@@ -69,7 +71,7 @@ public class CartController {
     }
 
     @GetMapping("/cart/del/{cid}")
-    public String delCart(@PathVariable Long cid, HttpSession session){
+    public String delCart(@PathVariable(name = "cid") Long cid, HttpSession session){
         cartService.removeItemCart(cid);
         return "redirect:/cart";
     }

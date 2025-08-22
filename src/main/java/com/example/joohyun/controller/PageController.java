@@ -1,11 +1,9 @@
 package com.example.joohyun.controller;
 
-import com.example.joohyun.dto.AddressDTO;
-import com.example.joohyun.dto.CommentDTO;
-import com.example.joohyun.dto.UserDTO;
-import com.example.joohyun.entity.*;
-import com.example.joohyun.service.*;
-import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -16,9 +14,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import com.example.joohyun.dto.AddressDTO;
+import com.example.joohyun.dto.CommentDTO;
+import com.example.joohyun.dto.UserDTO;
+import com.example.joohyun.entity.Cart;
+import com.example.joohyun.entity.Order;
+import com.example.joohyun.entity.Product;
+import com.example.joohyun.service.AddressService;
+import com.example.joohyun.service.CartService;
+import com.example.joohyun.service.CommentService;
+import com.example.joohyun.service.OrderService;
+import com.example.joohyun.service.ProductService;
+import com.example.joohyun.service.UserService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class PageController {
@@ -48,10 +57,10 @@ public class PageController {
     @GetMapping("/shop")
     public String shop(
             Model model,
-            @RequestParam(defaultValue = "0") int pageNum,
-            @RequestParam(defaultValue = "12") int pageSize,
-            @RequestParam(defaultValue = "pid") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDir
+            @RequestParam(name = "pageNum", defaultValue = "0") int pageNum,
+            @RequestParam(name = "pageSize", defaultValue = "12") int pageSize,
+            @RequestParam(name = "sortBy", defaultValue = "pid") String sortBy,
+            @RequestParam(name = "sortDir", defaultValue = "asc") String sortDir
     ){
         model.addAttribute("title", "Shop - ");
 
@@ -184,7 +193,7 @@ public class PageController {
     }
 
     @GetMapping("/single-product/{productId}")
-    public String singleProduct(@PathVariable Long productId, Model model) {
+    public String singleProduct(@PathVariable(name = "productId") Long productId, Model model) {
         Optional<Product> productOptional = productService.getProductById(productId);
         if (productOptional.isPresent()) {
             Product product = productOptional.get();

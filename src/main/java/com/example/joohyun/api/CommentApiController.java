@@ -15,7 +15,7 @@ public class CommentApiController {
     private CommentService commentService;
 
     @GetMapping("/api/comments/{cid}")
-    public ResponseEntity<CommentDTO> getComment(@PathVariable Long cid) {
+    public ResponseEntity<CommentDTO> getComment(@PathVariable(name = "cid") Long cid) {
         CommentDTO comment = commentService.findCommentById(cid);
         if(comment== null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -25,7 +25,7 @@ public class CommentApiController {
     }
 
     @PostMapping("/api/comments/{productId}")
-    public ResponseEntity<CommentDTO> comment(@PathVariable Long productId, @RequestBody CommentDTO cmt) {
+    public ResponseEntity<CommentDTO> comment(@PathVariable(name = "productId") Long productId, @RequestBody CommentDTO cmt) {
         CommentDTO createdcmt = commentService.create(productId, cmt);
         if(createdcmt == null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);

@@ -98,6 +98,8 @@
         <script type="text/javascript" src="/js/bxslider.min.js"></script>
         <script type="text/javascript" src="/js/script.slider.js"></script>
         <script>
+            var mynameis = "joohyun"
+
             function getQueryParam(name) {
                 const urlParams = new URLSearchParams(window.location.search);
                 return urlParams.get(name);
@@ -154,6 +156,13 @@
                     window.location.href = 'http://www.ustora.kro.kr/loginPage';
                 }
 
+                const signupStatus = getQueryParam('signupStatus');
+                console.log(signupStatus);
+                if (signupStatus === 'fail') {
+                    alert('다시 회원가입 해주세요!');
+                    window.location.href = 'http://www.ustora.kro.kr/signupPage';
+                }
+
                 const loginSuccess = getQueryParam('loginSuccess');
                 if (loginSuccess === 'True'){
                     dataLayer.push({
@@ -161,6 +170,7 @@
                         method: 'email_password',
                     });
                 }
+
             };
         </script>
     </body>

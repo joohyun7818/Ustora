@@ -25,7 +25,7 @@ public class LoginController {
     }
 
     @GetMapping("/signupPage")
-    public String signipPage(Model model) {
+    public String signipPage(Model model, RedirectAttributes redirectAttributes) {
         model.addAttribute("title", "SignupPage- ");
         return "/signupPage";
     }
@@ -48,9 +48,19 @@ public class LoginController {
     }
 
     @PostMapping("/signup")
-    public String signup(UserDTO userDto) {
+    public String signup(UserDTO userDto, Model model) {
+        String email = userDto.getEmail();
+        System.out.println("email: " + email);
+        User existingUser = userRepository.findById(email).orElse(null);
+        if (existingUser != null) {
+            model.addAttribute("signupStatus", "fail");
+            return "redirect:/signupPage?signupStatus=fail";
+        }
         User user = userDto.toEntity();
         userRepository.save(user);
+        model.addAttribute("signupStatus", "success");
+        System.out.println("회원가입 성공: ");
+    
         return "redirect:/loginPage";
     }
 
